@@ -1,0 +1,13 @@
+{
+  "name": "ร้านผ้าม่าน",
+  "short_name": "ผ้าม่าน",
+  "description": "ระบบบริหารจัดการร้านผ้าม่านครบวงจร",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0F2027",
+  "theme_color": "#0F6E56",
+  "orientation": "portrait",
+  "icons": [
+    { "src": "/favicon.ico", "sizes": "64x64", "type": "image/x-icon" }
+  ]
+}
