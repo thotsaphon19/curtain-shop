@@ -2,8 +2,11 @@ import { NextRequest, NextResponse } from 'next/server'
 import { verifyToken } from '@/lib/session'
 
 const PUBLIC = ['/login','/join','/api/auth','/api/line','/manifest.json','/favicon.ico']
+const ADMIN_PATHS = ['/dashboard','/jobs','/customers','/technicians','/reports',
+  '/quotations','/invoices','/inventory','/payments','/settings',
+  '/line-notify','/map','/queue','/admin']
 
-export function middleware(req: NextRequest) {
+export function proxy(req: NextRequest) {
   const { pathname } = req.nextUrl
   if (PUBLIC.some(p => pathname.startsWith(p))) return NextResponse.next()
   if (pathname.startsWith('/_next')) return NextResponse.next()
@@ -24,17 +27,4 @@ export function middleware(req: NextRequest) {
     return NextResponse.redirect(new URL('/customer-portal', req.url))
   }
 
-  const adminPaths = ['/dashboard','/jobs','/customers','/technicians','/reports',
-    '/quotations','/invoices','/inventory','/payments','/settings',
-    '/line-notify','/map','/queue','/admin']
-
-  if (adminPaths.some(p => pathname.startsWith(p)) && !isAdmin) {
-    return NextResponse.redirect(new URL('/login', req.url))
-  }
-
-  return NextResponse.next()
-}
-
-export const config = {
-  matcher: ['/((?!_next/static|_next/image|favicon.ico).*)'],
-}
+  if (ADMIN_PATHS.some(p => pathname.startsWith(p)) && !isAdmin) {
