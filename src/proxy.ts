@@ -2,7 +2,9 @@ import { NextRequest, NextResponse } from 'next/server'
 import { verifyToken } from '@/lib/session'
 
 const PUBLIC = ['/login', '/join', '/api/auth', '/api/line', '/manifest.json', '/favicon.ico']
-const ADMIN_PATHS = ['/dashboard', '/jobs', '/customers', '/technicians', '/reports', '/quotations', '/invoices', '/inventory', '/payments', '/settings', '/line-notify', '/map', '/queue', '/admin']
+const ADMIN_PATHS = ['/dashboard', '/jobs', '/customers', '/technicians', '/reports',
+  '/quotations', '/invoices', '/inventory', '/payments', '/settings',
+  '/line-notify', '/map', '/queue', '/admin']
 
 export function proxy(req: NextRequest) {
   const { pathname } = req.nextUrl
@@ -16,8 +18,8 @@ export function proxy(req: NextRequest) {
   const user = verifyToken(token)
   if (!user) return NextResponse.redirect(new URL('/login', req.url))
 
-  const adminIds = (process.env.ADMIN_LINE_USER_IDS || '').split(',').map(s => s.trim()).filter(Boolean)
-  const isAdmin = adminIds.includes(user.line_user_id)
+  // Admin ถ้า role=admin (ทั้งจาก username/password และ LINE)
+  const isAdmin = user.role === 'admin'
 
   if (pathname === '/') {
     if (isAdmin) return NextResponse.redirect(new URL('/dashboard', req.url))
